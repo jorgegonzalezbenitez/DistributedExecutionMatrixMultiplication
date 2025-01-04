@@ -1,4 +1,4 @@
-package org.example;
+package org.example.BasicMultiplication;
 
 import java.util.Random;
 

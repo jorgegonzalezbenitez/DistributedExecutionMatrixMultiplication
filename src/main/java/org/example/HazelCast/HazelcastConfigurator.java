@@ -1,4 +1,4 @@
-package org.example;
+package org.example.HazelCast;
 
 import com.hazelcast.config.Config;
 import com.hazelcast.config.SerializationConfig;
@@ -11,7 +11,6 @@ public class HazelcastConfigurator {
         Config config = new Config();
         SerializationConfig serializationConfig = config.getSerializationConfig();
 
-        // Registrar la fábrica de serialización
         serializationConfig.addDataSerializableFactory(
                 MatrixTaskDataSerializableFactory.FACTORY_ID,
                 new MatrixTaskDataSerializableFactory()

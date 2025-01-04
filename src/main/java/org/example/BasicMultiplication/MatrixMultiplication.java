@@ -1,6 +1,5 @@
-package org.example;
+package org.example.BasicMultiplication;
 
-// Clase para manejar la multiplicación secuencial de matrices
 public class MatrixMultiplication {
 
     public double[][] matrixMultiply(double[][] A, double[][] B) {

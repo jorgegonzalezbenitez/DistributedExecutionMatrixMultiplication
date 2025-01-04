@@ -1,4 +1,4 @@
-package org.example;
+package org.example.HazelCast;
 
 import com.hazelcast.nio.serialization.DataSerializableFactory;
 import com.hazelcast.nio.serialization.IdentifiedDataSerializable;

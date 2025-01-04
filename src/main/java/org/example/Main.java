@@ -4,6 +4,10 @@ import com.hazelcast.config.Config;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IExecutorService;
+import org.example.BasicMultiplication.GenerateMatrix;
+import org.example.BasicMultiplication.MatrixMultiplication;
+import org.example.HazelCast.DistributedMatrixMultiplication;
+import org.example.HazelCast.MatrixTaskDataSerializableFactory;
 
 import java.util.concurrent.ExecutionException;
 
@@ -14,11 +18,9 @@ public class Main {
     private static final MatrixMultiplication matrixMultiplication = new MatrixMultiplication();
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        // Generar matrices A y B
         double[][] matrixA = generateMatrix.initializeMatrix(MATRIX_SIZE);
         double[][] matrixB = generateMatrix.initializeMatrix(MATRIX_SIZE);
 
-        // Multiplicación secuencial
         System.out.println("Starting sequential matrix multiplication...");
         long sequentialStart = System.nanoTime();
         double[][] sequentialResult = matrixMultiplication.matrixMultiply(matrixA, matrixB);
@@ -26,14 +28,12 @@ public class Main {
         double sequentialTime = (sequentialEnd - sequentialStart) / 1e9;
         System.out.println("Sequential time: " + sequentialTime + " seconds");
 
-        // Configurar Hazelcast
         Config config = new Config();
         config.getSerializationConfig().addDataSerializableFactory(MatrixTaskDataSerializableFactory.FACTORY_ID, new MatrixTaskDataSerializableFactory());
 
         HazelcastInstance hazelcastInstance = Hazelcast.newHazelcastInstance(config);
         IExecutorService executorService = hazelcastInstance.getExecutorService("matrixMultiplication");
 
-        // Multiplicación distribuida con Hazelcast
         System.out.println("Starting distributed matrix multiplication with Hazelcast...");
         Double[][] distributedResult = new Double[MATRIX_SIZE][MATRIX_SIZE];
         long distributedStart = System.nanoTime();
@@ -42,9 +42,9 @@ public class Main {
             DistributedMatrixMultiplication.MatrixMultiplyTask task =
                     new DistributedMatrixMultiplication.MatrixMultiplyTask(matrixA[i], matrixB, MATRIX_SIZE);
 
-            // Ejecutar las tareas distribuidas
             distributedResult[i] = executorService.submit(task).get();
         }
+
 
         long distributedEnd = System.nanoTime();
         double distributedTime = (distributedEnd - distributedStart) / 1e9;

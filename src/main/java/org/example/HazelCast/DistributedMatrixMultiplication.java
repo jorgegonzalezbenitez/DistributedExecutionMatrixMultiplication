@@ -1,4 +1,4 @@
-package org.example;
+package org.example.HazelCast;
 
 import com.hazelcast.nio.ObjectDataInput;
 import com.hazelcast.nio.ObjectDataOutput;
@@ -10,9 +10,9 @@ import java.util.concurrent.Callable;
 public class DistributedMatrixMultiplication {
 
     public static class MatrixMultiplyTask implements Callable<Double[]>, IdentifiedDataSerializable {
-        private double[] row;      // Fila de la matriz A
-        private double[][] matrixB; // Matriz B completa
-        private int size;          // Tamaño de las matrices
+        private double[] row;
+        private double[][] matrixB;
+        private int size;
 
         public MatrixMultiplyTask() {
         }
@@ -26,7 +26,7 @@ public class DistributedMatrixMultiplication {
         @Override
         public Double[] call() {
             if (row == null || matrixB == null || size <= 0) {
-                throw new IllegalStateException("Datos inválidos para la tarea de multiplicación");
+                throw new IllegalStateException("Invalid data for the multiplication task");
             }
 
             Double[] resultRow = new Double[size];
@@ -45,7 +45,7 @@ public class DistributedMatrixMultiplication {
             out.writeDoubleArray(row);
 
             if (matrixB == null) {
-                out.writeInt(0); // Longitud cero si la matriz es nula
+                out.writeInt(0);
             } else {
                 out.writeInt(matrixB.length);
                 for (double[] bRow : matrixB) {
@@ -78,10 +78,6 @@ public class DistributedMatrixMultiplication {
         @Override
         public int getClassId() {
             return MatrixTaskDataSerializableFactory.MATRIX_MULTIPLY_TASK; // Cambiado a 1
-        }
-
-        public int getId() {
-            return MatrixTaskDataSerializableFactory.MATRIX_MULTIPLY_TASK;
         }
     }
 }
